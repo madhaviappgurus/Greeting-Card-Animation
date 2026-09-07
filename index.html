@@ -37,38 +37,82 @@
         .frame-scale {
             width: 100%;
             height: 100%;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             transform-origin: center center;
-            transform: scale(0);
-            animation: frameScaleIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+            transform: scale(0.02) rotateY(-160deg) skewX(10deg);
+            perspective: 1400px;
+            /* animation: frameScaleIn 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards; */
+            animation: frameScaleIn 2.5s ease forwards;
+        }
+
+        .frame-scale.visible {
+            display: flex;
         }
 
         @keyframes frameScaleIn {
             0% {
-                transform: scale(0);
+                transform: scale(0.02) rotateY(-160deg) skewX(10deg);
                 opacity: 0;
             }
 
-            60% {
+            55% {
                 opacity: 1;
             }
 
             100% {
-                transform: scale(1);
+                transform: scale(1) rotateY(0deg) skewX(0deg);
                 opacity: 1;
             }
+        }
+
+        .main-wrap-frame {
+            width: 100%;
+            height: 100dvh;
+            position: relative;
+        }
+
+        .video-wrap {
+            position: absolute;
+            inset: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .frame-scale {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
         }
 
         .frame {
             position: relative;
             width: 100%;
-            height: 100dvh;
+            height: 100%;
             background: var(--cream);
             box-shadow: 0 40px 80px -25px rgba(0, 0, 0, 0.55);
             overflow: hidden;
             perspective: 1400px;
+            transform: rotateY(-200deg);
+            animation: cardFlipIn 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+        }
+
+        @keyframes cardFlipIn {
+            0% {
+                transform: rotateY(-200deg);
+            }
+
+            100% {
+                transform: rotateY(0deg);
+            }
         }
 
         .frame::before {
@@ -199,7 +243,7 @@
             top: 0;
             bottom: 0;
             width: 20px;
-            background: linear-gradient(90deg, rgba(59, 42, 69, 0.28), transparent);
+            background: linear-gradient(90deg, rgba(59, 42, 69, 0.1), transparent);
             z-index: 2;
         }
 
@@ -491,6 +535,7 @@
         @media (prefers-reduced-motion: reduce) {
 
             .frame-scale,
+            .frame,
             .headline .letter,
             .divider,
             .confetti,
@@ -523,6 +568,14 @@
 
         @media screen and (min-width:575px) {
             .frame {
+                width: 100%;
+                height: 100%;
+                /* width: min(92vw, 400px);
+                height: auto;
+                aspect-ratio: 9 / 16; */
+            }
+
+            .main-wrap-frame {
                 width: min(92vw, 400px);
                 height: auto;
                 aspect-ratio: 9 / 16;
@@ -547,66 +600,73 @@
 </head>
 
 <body>
+    <div class="main-wrap-frame">
+        <div class="video-wrap">
+            <video muted autoplay playsinline>
+                <source src="./images/V3.mp4" type="video/mp4">
+            </video>
+        </div>
 
-    <div class="frame-scale">
-        <div class="frame" id="frame">
-            <div class="confetti" style="top:6%; left:10%; animation-delay:0s;"></div>
-            <div class="confetti" style="top:10%; left:82%; animation-delay:1.2s;"></div>
+        <div class="frame-scale" id="frameScale">
+            <div class="frame" id="frame">
+                <div class="confetti" style="top:6%; left:10%; animation-delay:0s;"></div>
+                <div class="confetti" style="top:10%; left:82%; animation-delay:1.2s;"></div>
 
-            <img src="./images/hb-left.png" class="curtains img-left" alt="">
-            <img src="./images/hb-right.png" class="curtains img-right" alt="">
+                <img src="./images/hb-left.png" class="curtains img-left" alt="">
+                <img src="./images/hb-right.png" class="curtains img-right" alt="">
 
-            <div class="top-bday-frame">
-                <img src="./images/bday-frame1.png" class="frame-img one" alt="Bday Frame">
-                <img src="./images/bday-frame2.png" class="frame-img two" alt="Bday Frame">
-            </div>
+                <div class="top-bday-frame">
+                    <img src="./images/bday-frame1.png" class="frame-img one" alt="Bday Frame">
+                    <img src="./images/bday-frame2.png" class="frame-img two" alt="Bday Frame">
+                </div>
 
-            <img src="./images/gift-frame-left.png" class="gift-frame img-left" alt="">
-            <img src="./images/gift-frame-right.png" class="gift-frame img-right" alt="">
+                <img src="./images/gift-frame-left.png" class="gift-frame img-left" alt="">
+                <img src="./images/gift-frame-right.png" class="gift-frame img-right" alt="">
 
-            <div class="content">
-                <!-- <h1 class="headline" id="headline" aria-label="Happy Birthday"></h1> -->
-                <div class="divider" id="divider"></div>
+                <div class="content">
+                    <!-- <h1 class="headline" id="headline" aria-label="Happy Birthday"></h1> -->
+                    <div class="divider" id="divider"></div>
 
-                <div class="wish-panel" id="wishPanel">
-                    <div class="dust" style="top:8%; left:14%; background:var(--gold); animation-delay:0.4s;"></div>
-                    <div class="dust" style="top:12%; left:85%; background:var(--ink-dark); animation-delay:1.8s;">
-                    </div>
-                    <div class="dust" style="top:88%; left:20%; background:var(--ink-dark); animation-delay:2.6s;">
-                    </div>
-                    <div class="wish-wrap">
-                        <p class="wish" id="wish"
-                            aria-label="Wishing you a day as bright and wonderful as you are. May this new year of your life bring endless laughter, good health, and dreams that come true.">
-                        </p>
-                    </div>
-                    <div class="spark" id="spark">
-                        <svg viewBox="0 0 60 140" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="quillGrad2" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0" stop-color="#FF8A78"></stop>
-                                    <stop offset="1" stop-color="#FF6F59"></stop>
-                                </linearGradient>
-                            </defs>
-                            <path
-                                d="M30 4 C 52 20 56 62 40 100 C 33 116 18 126 8 138 C 5 118 3 96 10 78 C 1 58 4 28 30 4 Z"
-                                fill="url(#quillGrad2)" stroke="#FF6F59" stroke-width="1.2">
-                            </path>
-                            <path d="M30 6 L 9 132" stroke="#FF6F59" stroke-width="1" opacity="1">
-                            </path>
-                        </svg>
+                    <div class="wish-panel" id="wishPanel">
+                        <div class="dust" style="top:8%; left:14%; background:var(--gold); animation-delay:0.4s;"></div>
+                        <div class="dust" style="top:12%; left:85%; background:var(--ink-dark); animation-delay:1.8s;">
+                        </div>
+                        <div class="dust" style="top:88%; left:20%; background:var(--ink-dark); animation-delay:2.6s;">
+                        </div>
+                        <div class="wish-wrap">
+                            <p class="wish" id="wish"
+                                aria-label="Wishing you a day as bright and wonderful as you are. May this new year of your life bring endless laughter, good health, and dreams that come true.">
+                            </p>
+                        </div>
+                        <div class="spark" id="spark">
+                            <svg viewBox="0 0 60 140" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="quillGrad2" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0" stop-color="#FF8A78"></stop>
+                                        <stop offset="1" stop-color="#FF6F59"></stop>
+                                    </linearGradient>
+                                </defs>
+                                <path
+                                    d="M30 4 C 52 20 56 62 40 100 C 33 116 18 126 8 138 C 5 118 3 96 10 78 C 1 58 4 28 30 4 Z"
+                                    fill="url(#quillGrad2)" stroke="#FF6F59" stroke-width="1.2">
+                                </path>
+                                <path d="M30 6 L 9 132" stroke="#FF6F59" stroke-width="1" opacity="1">
+                                </path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <img src="./images/gift-bottom-img.png" class="gift-bottom" alt="Gift Bottom">
+                <img src="./images/gift-bottom-img.png" class="gift-bottom" alt="Gift Bottom">
 
-            <!-- closed book-style cover page: turns open slowly first, before anything inside animates -->
-            <div class="book-page" id="bookPage">
-                <div class="cover-face">
-                    <span class="cover-icon">
-                        <img src="./images/cake.png" alt="cake">
-                    </span>
-                    <p class="cover-title">A little birthday surprise</p>
+                <!-- closed book-style cover page: turns open slowly first, before anything inside animates -->
+                <div class="book-page" id="bookPage">
+                    <div class="cover-face">
+                        <span class="cover-icon">
+                            <img src="./images/cake.png" alt="cake">
+                        </span>
+                        <p class="cover-title">A little birthday surprise</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -851,13 +911,43 @@
         }
 
 
-        if (bookPage) {
-            setTimeout(
-                startBirthdayAnimation,
-                WISH_START_DELAY_MS
-            );
+        const frameScale = document.getElementById('frameScale');
+        const video = document.querySelector('.video-wrap video');
+
+        let frameRevealed = false;
+
+        function revealFrameScale() {
+            if (frameRevealed) return;
+            frameRevealed = true;
+
+            if (frameScale) {
+                // Reset the animation so it plays fresh from the moment of reveal
+                frameScale.style.animation = 'none';
+                // Force reflow to restart animation
+                void frameScale.offsetWidth;
+                frameScale.style.animation = '';
+                frameScale.classList.add('visible');
+            }
+
+            if (bookPage) {
+                setTimeout(
+                    startBirthdayAnimation,
+                    WISH_START_DELAY_MS
+                );
+            } else {
+                startBirthdayAnimation();
+            }
+        }
+
+        if (video) {
+            video.addEventListener('timeupdate', function () {
+                if (!frameRevealed && video.currentTime >= 6.5) {
+                    revealFrameScale();
+                }
+            });
         } else {
-            startBirthdayAnimation();
+            // Fallback: no video element found, reveal immediately
+            revealFrameScale();
         }
     </script>
 
